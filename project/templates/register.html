@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <form id="register-form">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="voter-id">Voter ID:</label>
+            <input type="text" id="voter-id" name="voter_id" required>
+
+            <label for="aadhaar-id">Aadhaar ID:</label>
+            <input type="text" id="aadhaar-id" name="aadhaar_id" required pattern="[0-9]{12}" title="Aadhaar ID must be 12 digits">
+
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" required pattern="[0-9]{10}" title="Phone number must be 10 digits">
+
+            <label for="passkey">Passkey:</label>
+            <input type="password" id="passkey" name="passkey" required>
+
+            <label>Capture Face:</label>
+            <div id="camera">
+                <video id="video" autoplay></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+            </div>
+            <button id="capture-button" type="button">Capture Photo</button>
+
+            <button type="submit">Register</button>
+        </form>
+        <div id="alert-section" class="alert"></div>
+    </div>
+
+    <script src="/static/js/register.js"></script>
+
+</body>
+</html>

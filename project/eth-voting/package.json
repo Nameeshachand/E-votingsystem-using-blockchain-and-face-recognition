@@ -1,0 +1,11 @@
+{
+    "name": "eth-voting",
+    "version": "1.0.0",
+    "dependencies": {
+      "web3": "^1.8.2"
+    },
+    "scripts": {
+      "start": "truffle migrate --reset --network development"
+    }
+  }
+  

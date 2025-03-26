@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - E-Voting System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Blockchain E-Voting System</h1>
+
+        <div class="button-container">
+            <button onclick="location.href='/register'">Register</button>
+            <button onclick="location.href='/login'">Login</button>
+            <button id="resetSystemButton" class="btn-danger">Reset System</button>
+        </div>
+
+        <div id="alert-section" class="alert" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById("resetSystemButton").addEventListener("click", async function() {
+            const confirmReset = confirm("⚠️ WARNING: This will delete ALL voter data and reset the system. Are you sure?");
+            if (!confirmReset) return;
+        
+            try {
+                const response = await fetch("/reset_system", { method: "POST" });
+                const result = await response.json();
+        
+                if (result.status === "success") {
+                    alert(`✅ System Reset Successful: ${result.message}`);
+                    location.reload(); // Refresh the page after reset
+                } else {
+                    alert(`❌ Reset Failed: ${result.message}`);
+                }
+            } catch (error) {
+                console.error("❌ Error resetting system:", error);
+                alert("An error occurred while resetting the system. Please try again.");
+            }
+        });
+        </script>
+        
+
+</body>
+</html>
+

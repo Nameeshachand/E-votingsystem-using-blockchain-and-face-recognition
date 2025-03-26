@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-voting System Using Blockchain</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Web3 UMD build -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
+
+  <!-- Ethers UMD build -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+  <!-- jQuery (optional) -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
+
+<style>
+
+    /* Global Dark Theme */
+    body {
+        background-color: #141414;
+        color: #eaeaea;
+        font-family: 'Arial', sans-serif;
+        text-align: center;
+    }
+    
+    /* Main Container */
+    .container {
+        background-color: #1e1e1e;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.3);
+        max-width: 600px;
+        margin: auto;
+    }
+    
+    /* Header */
+    h1 {
+        color: #ff4d4d;
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    
+    /* Buttons */
+    /* General Button Styling */
+.btn {
+    background: linear-gradient(to right, #8B0000, #FF4500);
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+    width: 180px; /* Same width as the back button */
+    text-align: center;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+}
+
+/* Hover Effect */
+.btn:hover {
+    background: linear-gradient(to right, #FF6347, #FF4500);
+    transform: scale(1.05);
+}
+    
+    /* Back Button */
+    #backButton , #viewChainButton , #voteButton {
+        background: linear-gradient(to right, #8B0000, #FF4500);
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto;
+        width: 150px;
+    }
+    
+    #backButton:hover ,#viewChainButton:hover ,#voteButton:hover{
+        background: linear-gradient(to right, #FF6347, #FF4500);
+        transform: scale(1.05);
+    }
+    
+    /* Inputs and Select */
+    input, select {
+        background-color: #333;
+        color: #eaeaea;
+        border: 1px solid #555;
+        padding: 10px;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #222;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+    
+    th, td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #555;
+    }
+    
+    th {
+        background-color: #444;
+        color: #eaeaea;
+        font-weight: bold;
+    }
+    
+    /* Blockchain Viewer */
+    #blockchainContainer {
+        background-color: rgb(64, 63, 63);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.3);
+        margin-top: 20px;
+    }
+    
+    /* Result Summary Heading */
+    h2 {
+        color: yellow;
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+</style>
+  
+</head>
+<body>
+
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"
+    ></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
+
+  <!-- Ethers UMD build: exposes a global `ethers` variable -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+    <h1>Voting Dashboard (Ganache + Ethereum)</h1>
+  
+    <!-- Voter ID (fetched from Flask Session or passed from previous page) -->
+    <label for="voterIdInput">Voter ID:</label>
+    <input type="text" id="voterIdInput" disabled />
+
+    <div id="trackingIdDisplay"></div>
+
+  
+    <label for="candidateSelect">Select Candidate:</label>
+    <select id="candidateSelect">
+      <option value="select">--Select--</option>
+      <option value="Candidate 1">Candidate 1</option>
+      <option value="Candidate 2">Candidate 2</option>
+      <option value="Candidate 3">Candidate 3</option>
+    </select>
+    <button id="voteButton">Cast Vote</button>
+  
+    <p id="voteStatus"></p>
+  
+    <h2>Result Summary:</h2>
+    <p>Candidate 1 Votes: <span id="candidate1Votes">0</span></p>
+    <p>Candidate 2 Votes: <span id="candidate2Votes">0</span></p>
+    <p>Candidate 3 Votes: <span id="candidate3Votes">0</span></p>
+  
+    <button id="viewChainButton">View Blockchains</button>
+    <div id="blockchainContainer"></div>
+
+    <button id="backButton">Back</button>
+  
+    <!-- Include Web3 (or ethers) and your main.js last -->
+    <script type="module">
+        // Import from the official JSDelivr link
+        import { ethers } from 'https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.js';
+        
+        console.log("Ethers version:", ethers.version);
+    
+        if (window.ethereum) {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          console.log("Got provider:", provider);
+        } else {
+          console.log("No window.ethereum found");
+        }
+    </script>
+    <script type="module" src="/static/js/main.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Login</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="voter-id">Voter ID:</label>
+            <input type="text" id="voter-id" name="voter_id" required>
+
+            <label for="passkey">Passkey:</label>
+            <input type="password" id="passkey" name="passkey" required>
+
+            <label>Capture Face:</label>
+            <div id="camera">
+                <video id="video" autoplay></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+            </div>
+            <button id="capture-button" type="button">Capture Photo</button>
+
+            <button type="submit">Login</button>
+        </form>
+        <div id="alert-section" class="alert"></div>
+    </div>
+
+    <script src="/static/js/login.js"></script>
+</body>
+</html>
